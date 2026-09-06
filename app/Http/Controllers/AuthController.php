@@ -20,7 +20,7 @@ class AuthController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            return redirect()->route('admin.index');
+            return redirect()->route('me');
         }
 
         return Inertia::render('auth/Login');
@@ -29,7 +29,7 @@ class AuthController extends Controller
     public function redirectToGoogle(Request $request)
     {
         if (Auth::check()) {
-            return redirect()->route('admin.index');
+            return redirect()->route('me');
         }
 
         if ($request->filled('redirect')) {

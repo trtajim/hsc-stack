@@ -8,13 +8,29 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
 
-test('login page is accessible', function () {
+test('login page is accessible for guests', function () {
     $response = $this->get('/login');
 
     $response->assertStatus(200);
 });
 
-test('redirects to google for authentication', function () {
+test('login page redirects authenticated users to /me', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get('/login');
+
+    $response->assertRedirect(route('me'));
+});
+
+test('google auth redirects authenticated users to /me', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get(route('auth.google'));
+
+    $response->assertRedirect(route('me'));
+});
+
+test('redirects to google for authentication for guests', function () {
     $response = $this->get(route('auth.google'));
 
     $response->assertRedirect();
